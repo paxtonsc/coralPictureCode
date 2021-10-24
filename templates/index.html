@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title> Image compression and transmission example</title>
+	</head>
+	<body>
+		<h1> Image compression and transmission test </h1>
+		<img src="{{ url_for('video_feed') }}">
+
+		<input type="submit" value="SPI send" onclick="spi()">
+
+		<input type="submit" value="UART send" onclick="uart()">
+
+	</body>
+
+	<script type="text/javascript">
+		function spi() {
+			var xhr = new XMLHttpRequest();
+			xhr.open("get", "{{ url_for('send_spi') }}", true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+			xhr.send();
+		}
+
+		function uart() {
+			var xhr = new XMLHttpRequest();
+			xhr.open("get", "{{ url_for('send_uart') }}", true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+			xhr.send();
+		}
+	</script>
+</html>
