@@ -9,7 +9,9 @@ import imutils
 import time
 import cv2
 import numpy as np
+
 import spidev 
+from periphery import SPI
 
 
 # init output frame and a lock to ensur  thread safe 
@@ -76,24 +78,46 @@ def video_feed():
 def send_spi():
     print("sending image data via spi")
 
+    #spi = spidev.SpiDev()
+    ## first arg: bus, secound arg: device
+    ## how do we configure this
+    #bus = 0
+    #open = 0
+    #spi.open(bus, open)
+
+    ## test data for initatial fun
+    #data = [0x00, 0x01, 0x02, 0x03]
+
+    #for i in range(4):
+    #    try:
+    #        print(">>>".format(spi.xfer(data)))
+    #        time.sleep(1)
+    #    except(keyboardInterrupt, systemExit):
+    #        spi.close()
+
+    #spi.close()
+    #print("data done transferring")
+    # MOSI = Microcomputer out serial in
+    # MISO = Microcomputer in serial out
+
     spi = spidev.SpiDev()
-    # first arg: bus, secound arg: device
-    # how do we configure this
     spi.open(0,0)
+    spi.max_speed_hz = 5000
+    spi.mode = 0b01
 
-    # test data for initatial fun
-    data = [99, 100, 101, 102]
-
-    for i in range(4):
-        try:
-            print(">>>".format(spi.xfer(data)))
-            time.sleep(1)
-        except(keyboardInterrupt, systemExit):
-            spi.close()
-
+    count = 0
+    while True:
+        data_out = [0xaa, 0xbb, 0xcc, 0xdd]
+        print("data out : {}".format(data_out))
+        spi.writebytes(data_out)
+        data_in = spi.readbytes(3)
+        print(data_in)
+        time.sleep(1)
+        count += 1
+        if count > 10:
+            break
     spi.close()
-    print("data done transferring")
-        
+
 
     return "{}"
 
